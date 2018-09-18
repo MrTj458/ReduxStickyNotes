@@ -1,15 +1,18 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { addNote } from '../reducers/notes'
+import { incId } from '../reducers/nextId'
 
 class NoteForm extends React.Component {
   state = { name: '' }
 
   handleSubmit = (e) => {
     e.preventDefault()
-    const { dispatch } = this.props
+    const { dispatch, id } = this.props
     const { name } = this.state
-    dispatch(addNote({ name }))
+    const note = { name, id }
+    dispatch(addNote(note))
+    dispatch(incId())
     this.setState({ name: '' })
   }
 
@@ -31,4 +34,8 @@ class NoteForm extends React.Component {
   }
 }
 
-export default connect()(NoteForm)
+const mapStateToProps = (state) => {
+  return { id: state.nextId }
+}
+
+export default connect(mapStateToProps)(NoteForm)
